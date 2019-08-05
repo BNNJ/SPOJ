@@ -3,7 +3,7 @@
 #include <string.h>
 #include <time.h>
 
-#define BUFF_SIZE 1000001
+#define BUFF_SIZE 1000000001
 
 int		main(int argc, char **argv)
 {
