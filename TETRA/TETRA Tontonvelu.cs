@@ -13,7 +13,8 @@ using System;
             for(int i= 0; i != N; i++)
             {     
                 Edges = Console.ReadLine().Split(' ');
-                dVolumeTet = Volumetet(double.Parse(Edges[0]), double.Parse(Edges[1]), double.Parse(Edges[2]), double.Parse(Edges[3]), double.Parse(Edges[4]), double.Parse(Edges[5]));
+                dVolumeTet = Volumetet(double.Parse(Edges[0]), double.Parse(Edges[1]), double.Parse(Edges[2]),
+                                       double.Parse(Edges[3]), double.Parse(Edges[4]), double.Parse(Edges[5]));
 
                 S1 = Area(double.Parse(Edges[0]), double.Parse(Edges[1]), double.Parse(Edges[3]));
                 S2 = Area(double.Parse(Edges[0]), double.Parse(Edges[2]), double.Parse(Edges[4]));
@@ -43,7 +44,8 @@ using System;
             e = Math.Pow(e, 2);
             f = Math.Pow(f, 2);
 
-            volume = Math.Sqrt(4 * a * b * c - a * (b + c - f) - b * (a + c - e) - c * (a + b - d) + (b + c - f) * (c + a - e) * (a + b - d)) / 12;
+            volume = Math.Sqrt(4 * a * b * c - a * (b + c - f) - b * (a + c - e) - c * (a + b - d) + (b + c - f) * 
+                               (c + a - e) * (a + b - d)) / 12;
 
             return volume;
         }
