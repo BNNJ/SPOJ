@@ -1,16 +1,15 @@
 using System;
 
-public class Program
+    public class Program
     {
         public static void Main()
         {
             int N = int.Parse(Console.ReadLine());
             string[] Edges;
             double dVolumeTet;
-            double dVolumeShp;
+            double dRadiusShp;
             double S1, S2, S3, S4;
-
-
+            
             for(int i= 0; i != N; i++)
             {     
                 Edges = Console.ReadLine().Split(' ');
@@ -21,19 +20,17 @@ public class Program
                 S3 = Area(double.Parse(Edges[1]), double.Parse(Edges[5]), double.Parse(Edges[2]));
                 S4 = Area(double.Parse(Edges[3]), double.Parse(Edges[4]), double.Parse(Edges[5]));
 
-                dVolumeShp = Math.Round(VolumShp(S1, S2, S3, S4, dVolumeTet),4);
-                Console.WriteLine(dVolumeShp);
+                dRadiusShp = Math.Round(RadiusSph(S1, S2, S3, S4, dVolumeTet),4);
+                Console.WriteLine(dRadiusShp);
             }
         }
 
-        public static double VolumShp(double s1, double s2, double s3, double s4, double vol)
+        public static double RadiusSph(double s1, double s2, double s3, double s4, double vol)
         {
             // radius of sphere = (3*vol)/SurfaceArea 
             double radius;
-            double VolShp;
             radius = (3 * vol) / (s1 + s2 + s3 + s4);
-            VolShp = 4 / 3 * Math.PI * Math.Pow(radius, 3);
-            return VolShp;
+            return radius;
         }
         public static double Volumetet(double a, double b, double c, double d, double e, double f)
         {
@@ -46,7 +43,8 @@ public class Program
             e = Math.Pow(e, 2);
             f = Math.Pow(f, 2);
 
-            volume = Math.Sqrt(4*a*b*c-a*(b+c-f)-b*(a+c-e)-c*(a+b-d)+(b+c-f)-(c+a-e)*(a+b-d))/12;
+            volume = Math.Sqrt(4 * a * b * c - a * (b + c - f) - b * (a + c - e) - c * (a + b - d) + (b + c - f) * (c + a - e) * (a + b - d)) / 12;
+
             return volume;
         }
 
