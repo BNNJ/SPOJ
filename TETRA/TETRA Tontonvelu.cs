@@ -19,21 +19,29 @@ using System.Collections.Generic;
             dVolumeTet = Volumetet(double.Parse(Edges[5]), double.Parse(Edges[4]), double.Parse(Edges[3]),
                                    double.Parse(Edges[0]), double.Parse(Edges[1]), double.Parse(Edges[2]));
                                   
-                Console.WriteLine(dVolumeTet);
                 S1 = Area(double.Parse(Edges[0]), double.Parse(Edges[1]), double.Parse(Edges[3]));
                 S2 = Area(double.Parse(Edges[0]), double.Parse(Edges[2]), double.Parse(Edges[4]));
                 S3 = Area(double.Parse(Edges[1]), double.Parse(Edges[5]), double.Parse(Edges[2]));
                 S4 = Area(double.Parse(Edges[3]), double.Parse(Edges[4]), double.Parse(Edges[5]));
 
 
+                
                 dRadiusShp = Math.Round(RadiusSph(S1, S2, S3, S4, dVolumeTet), 4);
-                Console.WriteLine(dRadiusShp);
+                
+                if (dRadiusShp == 0)
+                {
+                    Console.WriteLine("0.0000");
+                }
+
+                else
+                {
+                    Console.WriteLine(dRadiusShp);
+                }
             }
         }
 
         public static double RadiusSph(double s1, double s2, double s3, double s4, double vol)
         {
-            // radius of sphere = (3*vol)/SurfaceArea 
             double radius;
             radius = (3 * vol) / (s1 + s2 + s3 + s4);
             return radius;
