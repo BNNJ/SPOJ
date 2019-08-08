@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+
 
     public class Program
     {
@@ -9,19 +11,22 @@ using System;
             double dVolumeTet;
             double dRadiusShp;
             double S1, S2, S3, S4;
-            
-            for(int i= 0; i != N; i++)
-            {     
-                Edges = Console.ReadLine().Split(' ');
-                dVolumeTet = Volumetet(double.Parse(Edges[0]), double.Parse(Edges[1]), double.Parse(Edges[2]),
-                                       double.Parse(Edges[3]), double.Parse(Edges[4]), double.Parse(Edges[5]));
 
+            for (int i = 0; i != N; i++)
+            {
+                Edges = Console.ReadLine().Split(' ');
+                
+            dVolumeTet = Volumetet(double.Parse(Edges[5]), double.Parse(Edges[4]), double.Parse(Edges[3]),
+                                   double.Parse(Edges[0]), double.Parse(Edges[1]), double.Parse(Edges[2]));
+                                  
+                Console.WriteLine(dVolumeTet);
                 S1 = Area(double.Parse(Edges[0]), double.Parse(Edges[1]), double.Parse(Edges[3]));
                 S2 = Area(double.Parse(Edges[0]), double.Parse(Edges[2]), double.Parse(Edges[4]));
                 S3 = Area(double.Parse(Edges[1]), double.Parse(Edges[5]), double.Parse(Edges[2]));
                 S4 = Area(double.Parse(Edges[3]), double.Parse(Edges[4]), double.Parse(Edges[5]));
 
-                dRadiusShp = Math.Round(RadiusSph(S1, S2, S3, S4, dVolumeTet),4);
+
+                dRadiusShp = Math.Round(RadiusSph(S1, S2, S3, S4, dVolumeTet), 4);
                 Console.WriteLine(dRadiusShp);
             }
         }
@@ -33,22 +38,29 @@ using System;
             radius = (3 * vol) / (s1 + s2 + s3 + s4);
             return radius;
         }
-        public static double Volumetet(double a, double b, double c, double d, double e, double f)
+        public static double Volumetet(double U, double V, double W, double u, double v, double w)
         {
             double volume;
+            double a, b, c, d, X, x, Y, y, Z, z;
 
-            a = Math.Pow(a, 2);
-            b = Math.Pow(b, 2);
-            c = Math.Pow(c, 2);
-            d = Math.Pow(d, 2);
-            e = Math.Pow(e, 2);
-            f = Math.Pow(f, 2);
+        X = (w - U + v) * (U + v + w);
+        x = (U - v + w) * (v - w + U);
+        Y = (u - V + w) * (V + w + u);
+        y = (V - w + u) * (w - u + V);
+        Z = (v - W + u) * (W + u + v);
+        z = (W - u + v) * (u - v + W);
 
-            volume = Math.Sqrt(4 * a * b * c - a * (b + c - f) - b * (a + c - e) - c * (a + b - d) + (b + c - f) * 
-                               (c + a - e) * (a + b - d)) / 12;
+        a = Math.Sqrt(x * Y * Z);
+        b = Math.Sqrt(y * Z * X);
+        c = Math.Sqrt(z * X * Y);
+        d = Math.Sqrt(x * y * z);
+
+        volume = Math.Sqrt((-a + b + c + d) * (a - b + c + d) * (a + b - c + d) * 
+            (a + b + c - d)) / (192 * u * v * w);            
 
             return volume;
         }
+
 
         public static double Area(double a, double b, double c)
         {
@@ -61,3 +73,5 @@ using System;
             return Area;
         }
     }
+      
+
