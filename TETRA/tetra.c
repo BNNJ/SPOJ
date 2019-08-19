@@ -33,6 +33,8 @@ static double	calc_area(double a, double b, double c)
 	return (sqrt(p * (p - a) * (p - b) * (p - c)));
 }
 
+#define vol_sphere(x, y) (3 * x) / y
+
 int		main(void)
 {
 	int		nb_case;
@@ -48,7 +50,7 @@ int		main(void)
 						+ calc_area(u, V, W)
 						+ calc_area(v, W, U)
 						+ calc_area(w, V, U);
-		printf("%.4F\n", (3 * tetra_vol) / surface_area);
+		printf("%.4F\n", vol_sphere(tetra_vol, surface_area));
 	}
 	return (0);
 }
