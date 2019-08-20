@@ -30,11 +30,12 @@ void	gen_edges(int n, int nb_edges, int nb_nodes)
 	int	created = 0;
 
 	edges[0] = n;
-	while (++created < nb_edges)
+	while (created < nb_edges)
 	{
 		while (already_exists((n = RNG(nb_nodes, 1)), edges, created));
 		printf("%d %d\n", n, RNG(MAX_COST, MIN_COST));
 		edges[created] = n;
+		++created;
 	}
 }
 
