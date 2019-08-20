@@ -76,7 +76,7 @@ void	gen_graph()
 	char	**names;
 	printf("%d\n", nb_nodes);
 	names = malloc(sizeof(char*) * nb_nodes);
-	for (int i = 0; i <= nb_nodes; ++i)
+	for (int i = 0; i < nb_nodes; ++i)
 		names[i] = gen_node(i + 1, nb_nodes);
 	gen_start_end(names, nb_nodes);
 }
