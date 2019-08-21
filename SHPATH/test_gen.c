@@ -6,9 +6,9 @@
 #define	MIN_NODES	5
 #define	MAX_NODES	20
 #define	MIN_EDGES	1
-#define	MAX_EDGES	(MAX_NODES / 2)
-#define	MIN_PATHS	1	
-#define	MAX_PATHS	(MAX_NODES / 4)
+#define	MAX_EDGES	(MAX_NODES * 2)
+#define	MIN_REQ		1	
+#define	MAX_REQ		(MAX_NODES / 4)
 #define	MIN_NAME	3
 #define	MAX_NAME	10
 #define	MIN_COST	1
@@ -16,74 +16,109 @@
 
 #define RNG(x, y)	rand() % (x - y) + y
 
-int		already_exists(int n, int *edges, int nb_edges)
+typedef struct	s_graph
 {
-	for (int i = 0; i < nb_edges; ++i)
-		if (n == edges[i])
-			return (1);
-	return (0);
-}
+	char	**nodes;
+	int		**edges;
+	int		nb_nodes;
+}				t_graph;
 
-void	gen_edges(int n, int nb_edges, int nb_nodes)
+void		print_matrix(int **m, int size)
 {
-	int	edges[nb_edges + 1];
-	int	created = 0;
-
-	edges[0] = n;
-	while (created < nb_edges)
+	printf("----- MATRIX -----\nsize: %d\n", size);
+	printf("   0");
+	for (int i = 0; i < size; ++i)
+		printf("%4d", i + 1);
+	printf("\n");
+	for (int i = 0; i < size; ++i)
 	{
-		while (already_exists((n = RNG(nb_nodes, 1)), edges, created));
-		printf("%d %d\n", n, RNG(MAX_COST, MIN_COST));
-		edges[created] = n;
-		++created;
+		printf("%4d", i + 1);
+		for (int j = 0; j < size; ++j)
+			printf("%4d", m[i][j]);
+		printf("\n");
 	}
 }
 
-char	*gen_node(int n, int nb_nodes)
+char	*gen_name(void)
 {
-	int		nb_edges = RNG(MAX_EDGES, MIN_EDGES);
-	int		name_len = RNG(MAX_NAME, MIN_NAME);
 	char	*name;
+	int		len = RNG(MAX_NAME, MIN_NAME);
 
-	name = malloc(name_len);
-	for (int i = 0; i < name_len; ++i)
-		name[i] = rand() % 26 + 'a';
-	name[name_len] = 0;
-	printf("%s\n", name);
-	printf("%d\n", nb_edges);
-	gen_edges(n, nb_edges, nb_nodes);
+	name = malloc(len + 1);
+	for (int i = 0; i < len; ++i)
+		name[i] = RNG('z', 'a');
+	name[len] = 0;
 	return (name);
 }
 
-void	gen_start_end(char **names, int nb_nodes)
+char	**gen_nodes(int nb_nodes)
 {
-	int		nb_paths = RNG(MAX_PATHS, MIN_PATHS);
-	int		start, end;
+	char	**nodes;
 
-	printf("%d\n", nb_paths);
-	while (--nb_paths >= 0)
-	{
-		start = rand() % nb_nodes;
-		while ((end = rand() % nb_nodes) == start);
-		printf("%s %s\n", names[start], names[end]);
-	}
+	nodes = malloc(sizeof(char*) * nb_nodes);
+	for (int i = 0; i < nb_nodes; ++i)
+		nodes[i] = gen_name();
+	return (nodes);
 }
 
-void	gen_graph()
+int		**gen_edges(int nb_nodes)
 {
-	int		nb_nodes = RNG(MAX_NODES, MIN_NODES);
+	int	**edges;
 
-	char	**names;
-	printf("%d\n", nb_nodes);
-	names = malloc(sizeof(char*) * nb_nodes);
+	edges = malloc(sizeof(int*) * nb_nodes);
 	for (int i = 0; i < nb_nodes; ++i)
-		names[i] = gen_node(i + 1, nb_nodes);
-	gen_start_end(names, nb_nodes);
+		edges[i] = calloc(sizeof(int), nb_nodes);
+	for (int i = 0; i < nb_nodes; ++i)
+		for (int j = i + 1; j < nb_nodes; ++j)
+			edges[i][j] = edges[j][i] = RNG(3, 0) == 0 ? RNG(MAX_COST, MIN_COST) : 0;
+	return (edges);
+}
+
+void	gen_graph(t_graph *g)
+{
+	g->nb_nodes = RNG(MAX_NODES, MIN_NODES);
+	g->nodes = gen_nodes(g->nb_nodes);
+	g->edges = gen_edges(g->nb_nodes);
+}
+
+void	print_node(t_graph *g, int node)
+{
+	int	nb_edges = 0;
+
+	for (int i = 0; i < g->nb_nodes; ++i)
+		nb_edges += (g->edges[node][i] != 0);
+	printf("%s\n%d\n", g->nodes[node], nb_edges);
+	for (int i = 0; i < g->nb_nodes; ++i)
+		if (g->edges[node][i] != 0)
+			printf("%d %d\n", i + 1, g->edges[node][i]);
+}
+
+void	print_graph(t_graph *g)
+{
+	printf("%d\n", g->nb_nodes);
+	for (int i = 0; i < g->nb_nodes; ++i)
+		print_node(g, i);
+}
+
+void	print_requests(t_graph *g)
+{
+	int	nb_req = RNG(MAX_REQ, MIN_REQ);
+	int	s, e;
+
+	printf("%d\n", nb_req);
+	for (int i = 0; i < nb_req; ++i)
+	{
+		s = RNG(MAX_NODES, 0);
+		do e = RNG(MAX_NODES, 0);
+		while (s == e);
+		printf("%s %s\n", g->nodes[s], g->nodes[e]);
+	}
 }
 
 int		main(int argc, char **argv)
 {
-	int	nb_tests;
+	int		nb_tests;
+	t_graph	g;
 
 	if (argc == 2)
 	{
@@ -92,8 +127,12 @@ int		main(int argc, char **argv)
 		srand(time(NULL));
 		while (--nb_tests >= 0)
 		{
-			gen_graph();
+			g = (t_graph){NULL, NULL, 0};
+			gen_graph(&g);
+			print_graph(&g);
+			print_requests(&g);
 			printf("\n");
+//			free_graph(&g);
 		}
 	}
 	return (EXIT_SUCCESS);
