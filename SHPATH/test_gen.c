@@ -13,6 +13,7 @@
 #define	MAX_NAME	10
 #define	MIN_COST	1
 #define	MAX_COST	100
+#define	MAX_POP		3
 
 #define RNG(x, y)	rand() % (x - y) + y
 
@@ -24,6 +25,12 @@ typedef struct	s_graph
 }				t_graph;
 
 /*********************************** DEBUG ************************************/
+
+/*
+** uncomment the define to print some debug informations
+*/
+
+// #define DEBUG
 
 void		print_matrix(int **m, int size)
 {
@@ -65,6 +72,21 @@ char	**gen_nodes(int nb_nodes)
 	return (nodes);
 }
 
+/*
+** Generates a symmetrical matrix of size nb_nodes and fills it with the costs
+** associated with each edge.
+** It is filled line by line, starting from row line + 1,
+** so only the top right half is computed. The other half is filled by symmetry.
+** like this (the processed cells are marked with an x):
+** 0 1 2 3 4
+** 1 - x x x
+** 2 - - x x
+** 3 - - - x
+** 4 - - - -
+** For each processed cell, a random number between 0 and MAX_POP is generated,
+** and if this number is 0 then a cost is generated and stored in this cell.
+*/
+
 int		**gen_edges(int nb_nodes)
 {
 	int	**edges;
@@ -74,7 +96,7 @@ int		**gen_edges(int nb_nodes)
 		edges[i] = calloc(sizeof(int), nb_nodes);
 	for (int i = 0; i < nb_nodes; ++i)
 		for (int j = i + 1; j < nb_nodes; ++j)
-			edges[i][j] = edges[j][i] = RNG(3, 0) == 0 ? RNG(MAX_COST, MIN_COST) : 0;
+			edges[i][j] = edges[j][i] = RNG(MAX_POP, 0) == 0 ? RNG(MAX_COST, MIN_COST) : 0;
 	return (edges);
 }
 
@@ -106,6 +128,10 @@ void	print_graph(t_graph *g)
 		print_node(g, i);
 }
 
+/*
+** We want to make sure e != s, so the same node isn't both the start and the end.
+*/
+
 void	print_requests(t_graph *g)
 {
 	int	nb_req = RNG(MAX_REQ, MIN_REQ);
@@ -122,6 +148,17 @@ void	print_requests(t_graph *g)
 }
 
 /*********************************** MAIN *************************************/
+
+void	free_graph(t_graph *g)
+{
+	for (int i = 0; i < g->nb_nodes; ++i)
+	{
+		free(g->nodes[i]);
+		free(g->edges[i]);
+	}
+	free(g->nodes);
+	free(g->edges);
+}
 
 int		main(int argc, char **argv)
 {
@@ -141,7 +178,10 @@ int		main(int argc, char **argv)
 			print_requests(&g);
 			if (nb_tests != 0)
 				printf("\n");
-//			free_graph(&g);
+#ifdef DEBUG
+			print_matrix(g.edges, g.nb_nodes);
+#endif
+			free_graph(&g);
 		}
 	}
 	return (EXIT_SUCCESS);
