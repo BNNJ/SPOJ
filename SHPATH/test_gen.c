@@ -108,8 +108,8 @@ void	print_requests(t_graph *g)
 	printf("%d\n", nb_req);
 	for (int i = 0; i < nb_req; ++i)
 	{
-		s = RNG(MAX_NODES, 0);
-		do e = RNG(MAX_NODES, 0);
+		s = RNG(g->nb_nodes, 0);
+		do e = RNG(g->nb_nodes, 0);
 		while (s == e);
 		printf("%s %s\n", g->nodes[s], g->nodes[e]);
 	}
@@ -131,7 +131,8 @@ int		main(int argc, char **argv)
 			gen_graph(&g);
 			print_graph(&g);
 			print_requests(&g);
-			printf("\n");
+			if (nb_tests != 0)
+				printf("\n");
 //			free_graph(&g);
 		}
 	}
