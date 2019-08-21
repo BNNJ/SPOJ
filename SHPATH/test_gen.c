@@ -23,6 +23,8 @@ typedef struct	s_graph
 	int		nb_nodes;
 }				t_graph;
 
+/*********************************** DEBUG ************************************/
+
 void		print_matrix(int **m, int size)
 {
 	printf("----- MATRIX -----\nsize: %d\n", size);
@@ -38,6 +40,8 @@ void		print_matrix(int **m, int size)
 		printf("\n");
 	}
 }
+
+/****************************** GRAPH GENERATOR *******************************/
 
 char	*gen_name(void)
 {
@@ -81,6 +85,8 @@ void	gen_graph(t_graph *g)
 	g->edges = gen_edges(g->nb_nodes);
 }
 
+/****************************** OUTPUT DISPLAY ********************************/
+
 void	print_node(t_graph *g, int node)
 {
 	int	nb_edges = 0;
@@ -114,6 +120,8 @@ void	print_requests(t_graph *g)
 		printf("%s %s\n", g->nodes[s], g->nodes[e]);
 	}
 }
+
+/*********************************** MAIN *************************************/
 
 int		main(int argc, char **argv)
 {
